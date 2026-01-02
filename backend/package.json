@@ -1,0 +1,41 @@
+{
+  "name": "gems-simce-api",
+  "version": "1.0.0",
+  "description": "Gems SIMCE API - IA generativa para planes de mejora educativa",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts"
+  },
+  "keywords": ["SIMCE", "educación", "IA", "Gemini"],
+  "author": "Juan Cerda <contact@hackatonht.cl>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "@google-cloud/generative-ai": "^0.3.0",
+    "firebase-admin": "^12.0.0",
+    "stripe": "^14.0.0",
+    "@sendgrid/mail": "^8.1.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.0.0",
+    "@types/cors": "^2.8.13",
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
