@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from '@google-cloud/generative-ai';
 import { v4 as uuidv4 } from 'uuid';
+import authRoutes from './routes/auth';
+import jumpsellerfRoutes from './routes/jumpseller';
 
 dotenv.config();
 const app = express();
@@ -55,6 +57,10 @@ app.post('/gems/simce-lenguaje', async (req, res) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'gems-simce-api', version: '1.0.0' });
 });
+
+// Routes
+app.use('/auth', authRoutes);
+app.use('/webhook', jumpsellerfRoutes);
 
 app.listen(PORT, () => {
   console.log(`✅ Gems SIMCE API puerto ${PORT}`);
