@@ -94,3 +94,47 @@ app.listen(PORT, () => {
 });
 
 export default app;
+
+// JUMPSELLER WEBHOOK - Recibir ordenes y crear API keys
+app.post('/webhook/jumpseller', async (req: Request, res: Response) => {
+  try {
+    const { event, data } = req.body;
+    if (event === 'order.completed') {
+      const clientEmail = data.client_email || data.email;
+      const orderId = data.order_id;
+      const apiKey = `sk_${Math.random().toString(36).substr(2, 32)}_${Date.now()}`;
+      await db.collection('subscriptions').doc(clientEmail).set({
+        email: clientEmail,
+        apiKey,
+        status: 'active',
+        createdAt: new Date(),
+        jumpsellerId: orderId,
+        plan: 'pro'
+      });
+      res.json({ success: true, message: 'Subscription activated' });
+    } else {
+      res.json({ success: true });
+    }
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// SIMPLE AUTH - Validar API Key
+app.post('/api/v1/auth/validate-key', async (req: Request, res: Response) => {
+  try {
+    const { apiKey } = req.body;
+    const snap = await db.collection('subscriptions')
+      .where('apiKey', '==', apiKey)
+      .limit(1)
+      .get();
+    if (snap.empty) {
+      return res.status(401).json({ success: false, error: 'Invalid key' });
+    }
+    const user = snap.docs[0].data();
+    const token = Buffer.from(`${user.email}:${apiKey}`).toString('base64');
+    res.json({ success: true, token, email: user.email });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
